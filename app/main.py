@@ -12,6 +12,15 @@ app.add_middleware(
     allow_origins=["*"]
 )
 
+CSP = "default-src 'none'; connect-src 'self' wss://multiplayer-server-b8bb.onrender.com; script-src 'self'; style-src 'self';"
+@app.middleware("http")
+async def add_csp_header(request: Request, call_next):
+    resp = await call_next(request)
+    # Only add for HTML responses (optional)
+    if resp.headers.get("content-type", "").startswith("text/html"):
+        resp.headers["Content-Security-Policy"] = CSP
+    return resp
+
 @app.get("/debug")
 async def debug():
     return "<center>hello world</center>"
