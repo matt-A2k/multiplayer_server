@@ -21,6 +21,9 @@ async def sock(sock:WebSocket):
     await sock.accept()
 
     while True:
+        print('a')
         data = await sock.receive_text()
+        print('b')
         await sock.send_text(f"got: {data}")
+        print('c')
         print(data)
